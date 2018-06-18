@@ -1,0 +1,25 @@
+{
+  "name": "com.track.app",
+  "version": "1.0.0",
+  "description": "tets",
+  "cordova": {
+    "id": "com.track.app",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanjaymobpair/NewTest.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "sanjay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanjaymobpair/NewTest/issues"
+  },
+  "homepage": "https://github.com/sanjaymobpair/NewTest#readme"
+}

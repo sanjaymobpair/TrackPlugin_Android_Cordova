@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="com.track.app"
+    version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    <name>Track</name>
+    <js-module name="Track" src="www/Track.js">
+        <clobbers target="cordova.plugins.Track" />
+    </js-module>
+
+    <platform name="android">
+
+        <preference name="FIREBASE_MESSAGING_VERSION" default="17.0.0"/>
+        <preference name="ANDROID_SUPPORT_VERSION" default="27.+"/>
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="Track">
+                <param name="android-package" value="com.track.app.Track" />
+            </feature>
+        </config-file>
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+             <service android:name="com.track.app.MyFirebaseInstanceIDService">
+                <intent-filter>
+                    <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                </intent-filter>
+            </service>
+        </config-file>
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+
+            <receiver android:name="com.track.app.InstallRefferer" android:exported="true">
+                <intent-filter>
+                    <action android:name="com.android.vending.INSTALL_REFERRER" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <dependency id="cordova-support-android-plugin" version="~1.0.0"/>
+        <dependency id="cordova-support-google-services" version="~1.2.0"/>
+
+        <framework src="com.google.firebase:firebase-messaging:$FIREBASE_MESSAGING_VERSION" />
+        <framework src="com.android.support:support-compat:$ANDROID_SUPPORT_VERSION" />
+
+        <source-file src="src/android/Track.java" target-dir="src/com/track/app" />
+        <source-file src="src/android/InstallRefferer.java" target-dir="src/com/track/app" />
+        <source-file src="src/android/TrackLib.java" target-dir="src/com/track/app" />
+        <source-file src="src/android/Util.java" target-dir="src/com/track/app" />
+        <source-file src="src/android/InternetConnectionClass.java"
+            target-dir="src/com/track/app" />
+        <source-file src="src/android/MyFirebaseInstanceIDService.java"
+            target-dir="src/com/track/app" />
+    </platform>
+</plugin>
