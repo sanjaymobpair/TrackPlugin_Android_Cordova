@@ -25,6 +25,8 @@ public class Track extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         context = this.cordova.getActivity().getApplicationContext();
         util = new Util(context);
+
+        Log.d(TAG, "TOKEN GET ");
         if (action.equals("startTrack")) {
             String serverKey = args.getString(0);
             String apiKey = args.getString(1);
@@ -71,8 +73,6 @@ public class Track extends CordovaPlugin {
         useragent = util.getUserAgent();
         clickId = util.getClickID();
         domainendpoint = util.getDomainEndPoint();
-        if (InternetConnectionClass.getInstance(context).isOnline()) {
-            new Util.callapi(fcmtoken, apikey, serverkey, useragent, clickId, eventId, domainendpoint).execute();
-        }
+        new Util.callapi(fcmtoken, apikey, serverkey, useragent, clickId, eventId, domainendpoint).execute();
     }
 }

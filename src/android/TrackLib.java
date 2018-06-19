@@ -17,7 +17,7 @@ public class TrackLib {
     @SuppressLint("StaticFieldLeak")
     private static TrackLib instance = new TrackLib();
     private Util util;
-    private String refferer_chk, serverKey, apiKey, fcmToken, domainEndPoint;
+    private String refferer_chk;
     private String userAgent;
     private Context mContext;
 
@@ -41,34 +41,26 @@ public class TrackLib {
     public void init(Context context) {
         mContext = context;
         util = new Util(context);
-        userAgent = new WebView(context).getSettings().getUserAgentString();
 
         if (util.getUserAgent().equals("null")) {
+            userAgent = new WebView(context).getSettings().getUserAgentString();
             util.setUserAgent(userAgent);
         }
 
         if (util.getRefferer() != null) {
             refferer_chk = util.getRefferer();
         }
-        if (refferer_chk != null) {
-            Log.d(TAG, "If : Refferer" + refferer_chk);
-        } else {
-            Log.d(TAG, "Else : Null Refferer");
-        }
-
-        updateFCMToken();
     }
 
-    public void updateFCMToken() {
+    public void updateFCMToken(Context mContext, String fcmToken) {
         util = new Util(mContext);
         util.setIsFirstTime(false);
 
-        fcmToken = util.getFCMToken();
-        serverKey = util.getServerKey();
-        apiKey = util.getApiKey();
+        String serverKey = util.getServerKey();
+        String apiKey = util.getApiKey();
         refferer_chk = util.getRefferer();
         userAgent = util.getUserAgent();
-        domainEndPoint = util.getDomainEndPoint();
+        String domainEndPoint = util.getDomainEndPoint();
 
         Log.d(TAG, "FcmToken : " + fcmToken);
         Log.d(TAG, "ServerKey : " + serverKey);
@@ -80,7 +72,10 @@ public class TrackLib {
         String eventId = "INSTALL";
         Boolean res = util.getBoolean();
         Log.d(TAG, "Boolean" + res);
-        if (InternetConnectionClass.getInstance(mContext).isOnline()) {
+
+        if (serverKey.equals("null") || apiKey.equals("null") || domainEndPoint.equals("null")) {
+            Log.d(TAG, " Please Reopen Your App..not getting some data");
+        } else {
             Log.d(TAG, ":: IsOnline");
             if (res) {
                 Log.d(TAG, ":: IF");
@@ -88,8 +83,6 @@ public class TrackLib {
                 Log.d(TAG, ":: Else");
                 new Util.callapi(fcmToken, apiKey, serverKey, userAgent, refferer_chk, eventId, domainEndPoint).execute();
             }
-        } else {
-            Log.d(TAG, ":: OfLine");
         }
     }
 }

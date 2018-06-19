@@ -12,13 +12,16 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseIIDService";
     private Util util;
+    String refreshedToken;
 
     @Override
     public void onTokenRefresh() {
         util = new Util(this);
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken + " ::: " + util.getFCMToken());
+        refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
         util.setFCMToken(refreshedToken);
+        TrackLib.getInstance().updateFCMToken(this, refreshedToken);
+
     }
 }

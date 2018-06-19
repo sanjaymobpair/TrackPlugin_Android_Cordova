@@ -43,7 +43,7 @@ class Util {
     private static String CURRENT_DATE = "currentdate";
     private static String REFFERER = "refferer", CLICKID = "clickid", FCMTOKEN = "fcmtoken";
     private static String APIKEY = "apikey", SERVERKEY = "serverkey", USERAGENT = "useragent", BOOLEAN = "boolean", ISFIRSTTIME = "isFirst", STORELIST = "storelist";
-    private static String ISERROR = "iserror", DOMAINENDPOINT = "domainpoint";
+    private static String ISERROR = "iserror", DOMAINENDPOINT = "domainpoint", ISDATAGET = "DATAGET";
     private final SharedPreferences mPrefs;
     private static final String PREFERENCES = "settings";
     private String TAG = Util.class.getName();
@@ -138,17 +138,10 @@ class Util {
         putBoolean(ISFIRSTTIME, isFirstTime);
     }
 
-    boolean getIsFirstTime() {
-        return mPrefs.getBoolean(ISFIRSTTIME, true);
-    }
-
     void setErrorResponse(Boolean isError) {
         putBoolean(ISERROR, isError);
     }
 
-    boolean getErrorResponse() {
-        return mPrefs.getBoolean(ISERROR, false);
-    }
 
     /**
      * for store refferer in preference
@@ -218,17 +211,6 @@ class Util {
     String getUserAgent() {
         return mPrefs.getString(USERAGENT, "null");
     }
-
-    void setOfflineStage(String list) {
-        Set<String> lists = new HashSet<>();
-        lists.add(list);
-        putList(STORELIST, lists);
-    }
-
-    Set<String> getofflineStage() {
-        return mPrefs.getStringSet(STORELIST, null);
-    }
-
 
     @SuppressLint({"ObsoleteSdkInt", "HardwareIds"})
     public static String DeviceId(Context context) {
