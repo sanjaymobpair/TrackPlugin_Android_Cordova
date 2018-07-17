@@ -41,7 +41,8 @@ public class TrackLib {
     public void init(Context context) {
         mContext = context;
         util = new Util(context);
-
+        String fcmToken = util.getFCMToken();
+        Log.d(TAG, " :: Token" + fcmToken);
         if (util.getUserAgent().equals("null")) {
             userAgent = new WebView(context).getSettings().getUserAgentString();
             util.setUserAgent(userAgent);
@@ -50,6 +51,8 @@ public class TrackLib {
         if (util.getRefferer() != null) {
             refferer_chk = util.getRefferer();
         }
+
+        updateFCMToken(mContext, fcmToken);
     }
 
     public void updateFCMToken(Context mContext, String fcmToken) {

@@ -4,6 +4,7 @@ package com.track.app;
  * Created by ${Mobpair} on 12/3/18.
  */
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -21,7 +22,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         util.setFCMToken(refreshedToken);
-        TrackLib.getInstance().updateFCMToken(this, refreshedToken);
-
     }
+
 }
