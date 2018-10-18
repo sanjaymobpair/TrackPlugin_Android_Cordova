@@ -10,18 +10,18 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseIIDService";
     private Util util;
     String refreshedToken;
 
     @Override
-    public void onTokenRefresh() {
+    public void onNewToken(String s) {
+        super.onNewToken(s);
         util = new Util(this);
         // Get updated InstanceID token.
-        refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        util.setFCMToken(refreshedToken);
+        Log.d(TAG, "Refreshed token: " + s);
+        util.setFCMToken(s);
+        TrackLib.getInstance().updateFCMToken(this, s);
     }
-
 }
