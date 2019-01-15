@@ -1,12 +1,13 @@
 package com.track.app;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 import android.webkit.WebView;
+
+import static com.track.app.MyFirebaseInstanceIDService.isFcmTokenGet;
+import static com.track.app.Track.isApiKeyDataGet;
 
 /**
  * Created by ${Mobpair} on 21/3/18.
@@ -19,9 +20,8 @@ public class TrackLib {
     private Util util;
     private String refferer_chk;
     private String userAgent;
-    private Context mContext;
 
-    public static TrackLib getInstance() {
+    static TrackLib getInstance() {
         return instance;
     }
 
@@ -38,11 +38,9 @@ public class TrackLib {
         }
     }
 
-    public void init(Context context) {
-        mContext = context;
+    void init(Context context) {
         util = new Util(context);
-        String fcmToken = util.getFCMToken();
-        Log.d(TAG, " :: Token" + fcmToken);
+
         if (util.getUserAgent().equals("null")) {
             userAgent = new WebView(context).getSettings().getUserAgentString();
             util.setUserAgent(userAgent);
@@ -51,11 +49,16 @@ public class TrackLib {
         if (util.getRefferer() != null) {
             refferer_chk = util.getRefferer();
         }
+        String fcmToken = util.getFCMToken();
+        Log.d(TAG, "Token " + fcmToken + " isApiKeyDataGet " + isApiKeyDataGet + " isFcmTokenGet " + isFcmTokenGet);
 
-        updateFCMToken(mContext, fcmToken);
+        if (isApiKeyDataGet && isFcmTokenGet) {
+            Log.d(TAG, "True");
+            updateFCMToken(context, fcmToken);
+        }
     }
 
-    public void updateFCMToken(Context mContext, String fcmToken) {
+    private void updateFCMToken(Context mContext, String fcmToken) {
         util = new Util(mContext);
         util.setIsFirstTime(false);
 
@@ -83,7 +86,7 @@ public class TrackLib {
             if (res) {
                 Log.d(TAG, ":: IF");
             } else {
-                Log.d(TAG, ":: Else");
+                Log.d(TAG, ":: Else" + fcmToken + ":::" + eventId);
                 new Util.callapi(fcmToken, apiKey, serverKey, userAgent, refferer_chk, eventId, domainEndPoint).execute();
             }
         }

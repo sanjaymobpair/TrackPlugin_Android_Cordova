@@ -22,12 +22,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static com.track.app.MyFirebaseInstanceIDService.isFcmTokenGet;
+import static com.track.app.Track.isApiKeyDataGet;
 
 /**
  * Created by ${Mobpair} on 6/3/18.
@@ -40,13 +42,12 @@ class Util {
 
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
-    private static String CURRENT_DATE = "currentdate";
+    private static String TAG = Util.class.getName(), CURRENT_DATE = "currentdate";
     private static String REFFERER = "refferer", CLICKID = "clickid", FCMTOKEN = "fcmtoken";
     private static String APIKEY = "apikey", SERVERKEY = "serverkey", USERAGENT = "useragent", BOOLEAN = "boolean", ISFIRSTTIME = "isFirst", STORELIST = "storelist";
     private static String ISERROR = "iserror", DOMAINENDPOINT = "domainpoint", ISDATAGET = "DATAGET";
     private final SharedPreferences mPrefs;
     private static final String PREFERENCES = "settings";
-    private String TAG = Util.class.getName();
 
     /**
      * @param context context of used class
@@ -60,8 +61,8 @@ class Util {
     /**
      * putString method is used for store string value preference
      *
-     * @param name
-     * @param value
+     * @param name  KEY NAME
+     * @param value VALUE OF THAT KEY
      */
 
     private void putString(String name, String value) {
@@ -76,7 +77,8 @@ class Util {
         mPrefs.edit().putStringSet(name, value).apply();
     }
 
-    public void pushStringList(List<String> list, String uniqueListName) {
+    @SuppressLint("CommitPrefEdits")
+    void pushStringList(List<String> list, String uniqueListName) {
 
         mPrefs.edit().putInt(uniqueListName + "_size", list.size());
 
@@ -87,7 +89,7 @@ class Util {
         mPrefs.edit().apply();
     }
 
-    public List<String> pullStringList(String uniqueListName) {
+    List<String> pullStringList(String uniqueListName) {
 
         List<String> result = new ArrayList<>();
         int size = mPrefs.getInt(uniqueListName + "_size", 0);
@@ -138,7 +140,7 @@ class Util {
         putBoolean(ISFIRSTTIME, isFirstTime);
     }
 
-    void setErrorResponse(Boolean isError) {
+    private void setErrorResponse(Boolean isError) {
         putBoolean(ISERROR, isError);
     }
 
@@ -164,7 +166,7 @@ class Util {
      *
      * @param clickId store clickid
      */
-    void setClickId(String clickId) {
+    private void setClickId(String clickId) {
         putString(CLICKID, clickId);
     }
 
@@ -213,7 +215,7 @@ class Util {
     }
 
     @SuppressLint({"ObsoleteSdkInt", "HardwareIds"})
-    public static String DeviceId(Context context) {
+    private static String DeviceId(Context context) {
         @SuppressLint("HardwareIds")
         String ANDROID_ID = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
@@ -222,7 +224,7 @@ class Util {
         return ANDROID_ID;
     }
 
-    public static String getResponseofPost(String URL, HashMap<String, String> postDataParams) {
+    private static String getResponseofPost(String URL, HashMap<String, String> postDataParams) {
         java.net.URL url;
         String response = "";
         try {
@@ -257,9 +259,9 @@ class Util {
                 Log.d("Util", "TimeOut" + responseCode);
                 response = "";
             }
-            Log.d("jai", "response :" + response);
+            Log.d(TAG, "response :" + response);
 
-            if (response == null || response == "" || response.equals("")) {
+            if (response.equals("")) {
                 Log.d("jai", "response : null" + response);
             }
         } catch (Exception e) {
@@ -320,6 +322,11 @@ class Util {
                     String data = jsonObject.getString("data");
                     util.setClickId(data);
                     util.setBoolean(response);
+
+                    if (response) {
+                        isApiKeyDataGet = false;
+                        isFcmTokenGet = false;
+                    }
                     Log.d("Util", "Response ParaMeter : " + message + ":" + response + ":" + data);
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -3,9 +3,8 @@ package com.track.app;
 import android.content.Context;
 import android.util.Log;
 
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
-
+import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -20,6 +19,7 @@ public class Track extends CordovaPlugin {
     private String TAG = Track.class.getName();
     private Context context;
     private Util util;
+    static Boolean isApiKeyDataGet=false;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -36,11 +36,12 @@ public class Track extends CordovaPlugin {
                 util.setServerKey(serverKey);
                 util.setApiKey(apiKey);
                 util.setDomainEndPoint(domainendPoint);
+
                 Log.d(TAG, "Init : ServerKey" + serverKey + "ApiKey :" + apiKey + "FcmToken" + domainendPoint + "::" + util.getFCMToken());
             } else {
                 Log.d(TAG, "::: Else");
             }
-
+            isApiKeyDataGet = true;
             cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -64,6 +65,7 @@ public class Track extends CordovaPlugin {
         }
         return false;
     }
+
 
     private void startDailyTrack(String eventId) {
         String fcmtoken, serverkey, apikey, useragent, clickId, domainendpoint;
