@@ -13,13 +13,14 @@ import java.util.List;
 
 /**
  * This class echoes a string called from JavaScript.
+ * its CordovaPlugin Class To handle Response Come from JavaScript and handle through Android Classes
  */
 public class Track extends CordovaPlugin {
 
     private String TAG = Track.class.getName();
     private Context context;
     private Util util;
-    static Boolean isApiKeyDataGet=false;
+    static Boolean isApiKeyDataGet = false;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -27,11 +28,16 @@ public class Track extends CordovaPlugin {
         util = new Util(context);
 
         Log.d(TAG, "TOKEN GET ");
+
+        /**
+         * when acion come as startTrack it will Start Tracking Install also hadle Argument like serverKey,apiKey and domainendPoint
+         */
         if (action.equals("startTrack")) {
             String serverKey = args.getString(0);
             String apiKey = args.getString(1);
             String domainendPoint = args.getString(2);
 
+            // TODO: 2019-05-09 if SharedPreference are null than it will set data
             if (util.getServerKey().equals("null") || util.getApiKey().equals("null") || util.getDomainEndPoint().equals("null")) {
                 util.setServerKey(serverKey);
                 util.setApiKey(apiKey);
@@ -50,6 +56,8 @@ public class Track extends CordovaPlugin {
             });
             return true;
         } else if (action.equals("stage")) {
+
+            // TODO: 2019-05-09 This Will help to Track Stages
             String eventId = args.getString(0);
             if (InternetConnectionClass.getInstance(context).isOnline()) {
                 Log.d(TAG, "dailyTrack Called");
@@ -66,7 +74,10 @@ public class Track extends CordovaPlugin {
         return false;
     }
 
-
+    /**
+     * @param eventId whatever come from User
+     *                also get all details from SharedPref.
+     */
     private void startDailyTrack(String eventId) {
         String fcmtoken, serverkey, apikey, useragent, clickId, domainendpoint;
         fcmtoken = util.getFCMToken();

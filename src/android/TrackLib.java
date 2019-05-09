@@ -11,6 +11,8 @@ import static com.track.app.Track.isApiKeyDataGet;
 
 /**
  * Created by ${Mobpair} on 21/3/18.
+ * it will call Install Track Api through @Util Class
+ * also set User Agent,refferer etc.,
  */
 
 public class TrackLib {
@@ -21,10 +23,17 @@ public class TrackLib {
     private String refferer_chk;
     private String userAgent;
 
+    // TODO: 2019-05-09 Create Instance of Class
     static TrackLib getInstance() {
         return instance;
     }
 
+    /**
+     * it will have intent which have refferer data and set into SharedPreference
+     *
+     * @param context AppContext
+     * @param intent  data
+     */
     void onReceive(Context context, Intent intent) {
         String REFFERER_VALUE = "referrer";
         String referrer = intent.getStringExtra(REFFERER_VALUE);
@@ -38,14 +47,25 @@ public class TrackLib {
         }
     }
 
+    /**
+     * get user agent,refferer etc
+     * if it will get fcmtoken successfully call updateFCMToken method
+     *
+     * @param context
+     */
     void init(Context context) {
         util = new Util(context);
-
+        /**
+         * check if userAgent is null then ot will getUserAgent and store in Preference
+         */
         if (util.getUserAgent().equals("null")) {
             userAgent = new WebView(context).getSettings().getUserAgentString();
             util.setUserAgent(userAgent);
         }
 
+        /**
+         * Store refferer in SharedPreference if it is null
+         */
         if (util.getRefferer() != null) {
             refferer_chk = util.getRefferer();
         }
@@ -58,6 +78,13 @@ public class TrackLib {
         }
     }
 
+    /**
+     * it will get All Value like serverKey,apiKey,refferer_chk,userAgent and domainEndPoint
+     * if all value got than call Api For Install Track
+     *
+     * @param mContext
+     * @param fcmToken
+     */
     private void updateFCMToken(Context mContext, String fcmToken) {
         util = new Util(mContext);
         util.setIsFirstTime(false);

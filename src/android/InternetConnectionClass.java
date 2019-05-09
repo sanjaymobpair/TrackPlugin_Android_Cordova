@@ -8,6 +8,7 @@ import android.util.Log;
 
 /**
  * Created by ${Mobpair} on 3/4/18.
+ * it will check Internet Connectivity
  */
 public class InternetConnectionClass {
 
@@ -22,6 +23,10 @@ public class InternetConnectionClass {
         return instance;
     }
 
+    /**
+     * it will check is device is Online Or Not
+     * @return true or false
+     */
     public boolean isOnline() {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context

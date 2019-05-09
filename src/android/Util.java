@@ -224,34 +224,60 @@ class Util {
         return ANDROID_ID;
     }
 
+    /**
+     * Handle Url Call
+     *
+     * @param URL            url get through response
+     * @param postDataParams post Data To Pass
+     * @return
+     */
     private static String getResponseofPost(String URL, HashMap<String, String> postDataParams) {
         java.net.URL url;
         String response = "";
         try {
+            // TODO: 2019-05-09 set Url 
             url = new URL(URL);
 
+            // TODO: 2019-05-09 OpenUrlConnection Using HttpURLConnection Class 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            // TODO: 2019-05-09 Read Timeout 50 sec. 
             conn.setReadTimeout(50000);
+            // TODO: 2019-05-09 Connection TImeout 50 sec. 
             conn.setConnectTimeout(50000);
+            // TODO: 2019-05-09 Read TimeOut 50sec. 
             conn.setReadTimeout(50000);
+            // TODO: 2019-05-09 Connection Input/Ouput set true 
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
+            // TODO: 2019-05-09 Store OutPut Stream to get connection OutPut Stream 
             OutputStream os = conn.getOutputStream();
+
+            // TODO: 2019-05-09 store OutPut Stream into the BufferedWriter Class 
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
 
+            // TODO: 2019-05-09 Write params
             writer.write(getPostDataString(postDataParams));
 
+            // TODO: 2019-05-09 writer flush and close 
             writer.flush();
             writer.close();
+
+            // TODO: 2019-05-09 Close OuPut Stream 
             os.close();
+
+            // TODO: 2019-05-09 Get REsponse COde 
             int responseCode = conn.getResponseCode();
             Log.d("Util", "Response Code" + URL + " - " + responseCode);
+            
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 Log.d("Util", "If" + responseCode);
                 String line;
+                // TODO: 2019-05-09 BufferedReader read Stream
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                // TODO: 2019-05-09 store line in response
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
@@ -288,6 +314,9 @@ class Util {
         return result.toString();
     }
 
+    /**
+     * Calling Tracking API
+     */
     public static class callapi extends AsyncTask<String, String, String> {
         String token, apikey, serverkey, usergent, refferer, event_id, domainEndPoint;
 
@@ -320,6 +349,8 @@ class Util {
                     String message = jsonObject.getString("message");
                     Boolean response = jsonObject.getBoolean("response");
                     String data = jsonObject.getString("data");
+
+                    // TODO: 2019-05-09 set Response 
                     util.setClickId(data);
                     util.setBoolean(response);
 
